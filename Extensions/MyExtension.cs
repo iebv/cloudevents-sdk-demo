@@ -1,10 +1,6 @@
 ﻿using CloudNative.CloudEvents;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DemoCloudEventsNuget
 {
@@ -16,11 +12,16 @@ namespace DemoCloudEventsNuget
         private string _custom;
         public string Custom
         {
-            get => _custom;
+            get
+            {
+                if (_custom == null && AllAttributes[CustomAttributeName] != null)
+                    _custom = AllAttributes[CustomAttributeName].ToString();
+                return _custom;
+            }
             set
             {
                 _custom = value;
-                AllAttributes.Add(CustomAttributeName, _custom);
+                AllAttributes[CustomAttributeName] = _custom;
             }
         }
 
@@ -29,14 +30,15 @@ namespace DemoCloudEventsNuget
         public MyExtension()
         {
             AllAttributes = new Dictionary<string, object>();
+            AllAttributes.Add(CustomAttributeName, null);
         }
         
 
-        //This methos must be implmented for adding the attribute(s) to the CloudEvent instance
+        //This method must be implmented for adding the attribute(s) to the CloudEvent instance
         public void Attach(CloudEvent cloudEvent)
         {
-            foreach(var key in AllAttributes.Keys)
-                cloudEvent.GetAttributes().Add(key, AllAttributes[key]);
+            foreach (var key in AllAttributes.Keys)
+                cloudEvent.GetAttributes().Add(key, AllAttributes[key]);     
         }
 
         public Type GetAttributeType(string name)
@@ -50,7 +52,15 @@ namespace DemoCloudEventsNuget
             if (AllAttributes.ContainsKey(key))
             {
                 if (AllAttributes.TryGetValue(key, out object val))
+                {
+                    //This validation is needed when decoding the value of the attribute
+                    if (val == null && value != null) 
+                    {
+                        val = value;
+                        AllAttributes[key] = val;
+                    }
                     return val == value;
+                }
             }
             return false;
                

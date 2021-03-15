@@ -1,7 +1,7 @@
 ﻿using CloudNative.CloudEvents;
 using CloudNative.CloudEvents.Extensions;
+using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Net.Mime;
 
 namespace DemoCloudEventsNuget
@@ -50,7 +50,27 @@ namespace DemoCloudEventsNuget
 
             //Print result as JSON
             Console.WriteLine(content.ReadAsStringAsync().Result);
+
+
+            //--DECODING--//
+            var sampleJson = @"
+               {
+                   'specversion' : '1.0',
+                   'type' : 'com.github.pull.create',
+                   'id' : 'A234-1234-1234',
+                   'source' : 'event-source',
+                   'custom' : 'value-decoded'
+               }";
+
+            var jsonFormatter = new JsonEventFormatter();
+
+            JObject obj = JObject.Parse(sampleJson);
             
+            var myExt2 = new MyExtension();
+     
+            var cloudEvent2 = jsonFormatter.DecodeJObject(obj, new[] { myExt2 });
+
+            Console.WriteLine($"The value of the custom attr is: {cloudEvent2.Extension<MyExtension>().Custom}");
 
         }
     }
