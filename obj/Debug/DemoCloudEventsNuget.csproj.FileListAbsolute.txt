@@ -1,0 +1,11 @@
+C:\Users\monol\source\repos\DemoCloudEventsNuget\obj\Debug\DemoCloudEventsNuget.csprojAssemblyReference.cache
+C:\Users\monol\source\repos\DemoCloudEventsNuget\obj\Debug\DemoCloudEventsNuget.csproj.CoreCompileInputs.cache
+C:\Users\monol\source\repos\DemoCloudEventsNuget\bin\Debug\DemoCloudEventsNuget.exe.config
+C:\Users\monol\source\repos\DemoCloudEventsNuget\bin\Debug\DemoCloudEventsNuget.exe
+C:\Users\monol\source\repos\DemoCloudEventsNuget\bin\Debug\DemoCloudEventsNuget.pdb
+C:\Users\monol\source\repos\DemoCloudEventsNuget\bin\Debug\CloudNative.CloudEvents.dll
+C:\Users\monol\source\repos\DemoCloudEventsNuget\bin\Debug\Newtonsoft.Json.dll
+C:\Users\monol\source\repos\DemoCloudEventsNuget\bin\Debug\Newtonsoft.Json.xml
+C:\Users\monol\source\repos\DemoCloudEventsNuget\obj\Debug\DemoCloudEventsNuget.csproj.CopyComplete
+C:\Users\monol\source\repos\DemoCloudEventsNuget\obj\Debug\DemoCloudEventsNuget.exe
+C:\Users\monol\source\repos\DemoCloudEventsNuget\obj\Debug\DemoCloudEventsNuget.pdb
