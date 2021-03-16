@@ -14,13 +14,14 @@ namespace DemoCloudEventsNuget
             //Built in extension
             var ext = new DistributedTracingExtension()
             {
-                TraceParent = "value"
+                TraceParent = "trace-parent-value",
+                TraceState = "trace-state-value"
             };
 
             //Custom extension
             var myExt = new MyExtension()
             {
-                Custom = "value"
+                Custom = "custom-value"
             };
 
             ICloudEventExtension[] extensions = { ext, myExt };
@@ -59,7 +60,7 @@ namespace DemoCloudEventsNuget
                    'type' : 'com.github.pull.create',
                    'id' : 'A234-1234-1234',
                    'source' : 'event-source',
-                   'custom' : 'value-decoded'
+                   'custom' : 'value'
                }";
 
             var jsonFormatter = new JsonEventFormatter();
@@ -70,7 +71,7 @@ namespace DemoCloudEventsNuget
      
             var cloudEvent2 = jsonFormatter.DecodeJObject(obj, new[] { myExt2 });
 
-            Console.WriteLine($"The value of the custom attr is: {cloudEvent2.Extension<MyExtension>().Custom}");
+            Console.WriteLine($"The value of the decoded custom attr is: {cloudEvent2.Extension<MyExtension>().Custom}");
 
         }
     }

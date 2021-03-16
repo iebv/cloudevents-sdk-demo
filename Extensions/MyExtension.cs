@@ -9,61 +9,59 @@ namespace DemoCloudEventsNuget
 
         private const string CustomAttributeName = "custom";
 
-        private string _custom;
         public string Custom
         {
-            get
-            {
-                if (_custom == null && AllAttributes[CustomAttributeName] != null)
-                    _custom = AllAttributes[CustomAttributeName].ToString();
-                return _custom;
-            }
-            set
-            {
-                _custom = value;
-                AllAttributes[CustomAttributeName] = _custom;
-            }
+            get => allAttributes[CustomAttributeName] as string;
+            set => allAttributes[CustomAttributeName] = value;
         }
 
-        private Dictionary<string, object> AllAttributes { get; }
+        private IDictionary<string, object> allAttributes = new Dictionary<string, object>();
 
-        public MyExtension()
-        {
-            AllAttributes = new Dictionary<string, object>();
-            AllAttributes.Add(CustomAttributeName, null);
-        }
-        
 
         //This method must be implmented for adding the attribute(s) to the CloudEvent instance
         public void Attach(CloudEvent cloudEvent)
         {
-            foreach (var key in AllAttributes.Keys)
-                cloudEvent.GetAttributes().Add(key, AllAttributes[key]);     
+
+            var eventAttributes = cloudEvent.GetAttributes();
+            if (allAttributes == eventAttributes)
+            {
+                // already done
+                return;
+            }
+
+            foreach (var attr in allAttributes)
+            {
+                if (attr.Value != null)
+                {
+                    eventAttributes[attr.Key] = attr.Value;
+                }
+            }
+            allAttributes = eventAttributes; //This keep reference of the attributtes values when decoding  
         }
 
         public Type GetAttributeType(string name)
         {
-            AllAttributes.TryGetValue(name, out object value);
-            return value.GetType();
+            switch (name)
+            {
+                case CustomAttributeName:
+                    return typeof(string);
+            }
+            return null;
         }
 
         public bool ValidateAndNormalize(string key, ref dynamic value)
         {
-            if (AllAttributes.ContainsKey(key))
+            switch (key)
             {
-                if (AllAttributes.TryGetValue(key, out object val))
-                {
-                    //This validation is needed when decoding the value of the attribute
-                    if (val == null && value != null) 
-                    {
-                        val = value;
-                        AllAttributes[key] = val;
-                    }
-                    return val == value;
-                }
+                case CustomAttributeName:
+                    if (value is string)
+                        return true;
+
+                    throw new InvalidOperationException();
+
             }
             return false;
-               
+
         }
     }
 }
